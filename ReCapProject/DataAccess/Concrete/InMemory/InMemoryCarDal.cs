@@ -35,11 +35,17 @@ namespace DataAccess.Concrete.InMemory
             return _cars;
         }
 
+     
+
+        public List<Car> GetById(int id)
+        {
+            return _cars.Where(c => c.BrandID == id).ToList();
+        }
+
         public List<Car> GetByID(int brandID)
         {
-           return _cars.Where(c => c.BrandID == brandID).ToList();
+            throw new NotImplementedException();
         }
-            
 
         public void Update(Car car)
         {

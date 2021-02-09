@@ -22,8 +22,18 @@ namespace ConsoleUI
             {
                 Console.WriteLine(car.ModelYear + " Model " + car.Description + " : " + car.DailyPrice + "TL");
             }
-            
+
+            //Console.WriteLine("den"+carManager.GetById(5).Count);
+
+            foreach (var car in carManager.GetById(5))
+            {
+                Console.WriteLine("ID=5 olan araç:" + car.ModelYear + " Model " + car.Description + " : " + car.DailyPrice + "TL");
+            }
+
+
+           
+        }
 
         }
     }
-}
+
