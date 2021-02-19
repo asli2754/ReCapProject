@@ -1,5 +1,8 @@
-﻿using DataAccess.Abstract;
+﻿using Core.DataAccess.EntityFramework;
+using DataAccess.Abstract;
+using DataAccess.Concrete.IEntityFramework;
 using Entities.Concrete;
+using Entities.DTOs;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -7,66 +10,28 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 
-namespace DataAccess.Concrete.IEntityFramework
+namespace DataAccess.Concrete.EntityFramework
 {
-    public class EfCarDal : ICarDal
+    public class EfCarDal : EfEntityRepositoryBase<Car, CarSQLContext>, ICarDal
     {
-        public void Add(Car entity)
-        {
-            //IDisposable pattern implementation of c#
-            using (CarSQLContext context = new CarSQLContext()) // Belleği hızlıca tamizlemek için using kullanıyoruz.
-            {                                                       //Using kullanıldıktan sonra garbage collectoraı çağırır ve çöpe girer.
-                var addedEntity = context.Entry(entity); // Referansla kontrol ediyoruz.
-                addedEntity.State = EntityState.Added; // Durumunu ekle yapıyoruz
-                context.SaveChanges(); // İşlemi tamamlıyoruz.
-            }
-        }
-
-        public void Delete(Car entity)
-        {
-
-            using (CarSQLContext context = new CarSQLContext())
-            {
-                var addedEntity = context.Entry(entity); // Referansla kontrol ediyoruz.
-                addedEntity.State = EntityState.Deleted; // Durumunu silme yapıyoruz
-                context.SaveChanges(); // İşlemi tamamlıyoruz.
-            }
-        }
-
-        public Car Get(Expression<Func<Car, bool>> filter)
+        public List<CarDetailDto> GetCarDetails()
         {
             using (CarSQLContext context = new CarSQLContext())
             {
-                return context.Set<Car>().SingleOrDefault(filter);
-            }
-        }
-
-        public List<Car> GetAll(Expression<Func<Car, bool>> filter = null)
-        {
-            using (CarSQLContext context = new CarSQLContext())
-            {
-                return filter == null ? context.Set<Car>().ToList() // ? ile nullmı sorgusu yapıyoruz, öyleyse List şeklinde hepsini veriyoruz.
-                    : context.Set<Car>().Where(filter).ToList();   // : ile null değilse where ile getirilen koşula göre listeyi ver demek.
-            }       // System.Linq eklemyi unutmayalım. 
-        }
-
-        public List<Car> GetByBrandId(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<Car> GetByColorId(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Update(Car entity)
-        {
-            using (CarSQLContext context = new CarSQLContext())
-            {
-                var addedEntity = context.Entry(entity); // Referansla kontrol ediyoruz.
-                addedEntity.State = EntityState.Modified; // Durumunu modifiye etmek yapıyoruz, yani güncelliyor :)
-                context.SaveChanges(); // İşlemi tamamlıyoruz.
+                var result = from c in context.Cars
+                             join b in context.Brands
+                             on c.BrandId equals b.BrandId
+                             join cl in context.Colors
+                             on c.ColorId equals cl.ColorId
+                             select new CarDetailDto
+                             {
+                                 CarId = c.Id,
+                                 CarName = c.CarName,
+                                 BrandName = b.BrandName,
+                                 ColorName = cl.ColorName,
+                                 DailyPrice = c.DailyPrice
+                             };
+                return result.ToList();
             }
         }
     }

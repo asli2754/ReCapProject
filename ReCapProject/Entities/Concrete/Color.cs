@@ -1,7 +1,8 @@
-﻿using System;
+﻿
+using Core.Entities;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using Entities.Abstract;
 
 namespace Entities.Concrete
 {
@@ -9,6 +10,5 @@ namespace Entities.Concrete
     {
         public int ColorId { get; set; }
         public string ColorName { get; set; }
-
     }
 }

@@ -1,16 +1,15 @@
-﻿using System;
+﻿using Business.Abstract;
+using DataAccess.Abstract;
+using Entities.Concrete;
+using Entities.DTOs;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using Business.Abstract;
-using DataAccess.Abstract;
-using DataAccess.Concrete.InMemory;
-using Entities.Concrete;
 
 namespace Business.Concrete
 {
     public class CarManager : ICarService
     {
-        //Business katmanında DataAccess katmanını kullanabilmek için constructor injection uygulandı.
         ICarDal _carDal;
 
         public CarManager(ICarDal carDal)
@@ -18,17 +17,18 @@ namespace Business.Concrete
             _carDal = carDal;
         }
 
-        //İş kuralları eklendi
         public void Add(Car car)
         {
-            if (car.Description.Length >= 2 && car.DailyPrice > 0)
+            if (car.DailyPrice <= 0)
             {
-                _carDal.Add(car);
+                Console.WriteLine("\nAraba günlük fiyatı 0 TL'den büyük olmalıdır.");
             }
             else
             {
-                Console.WriteLine("Hata! Araba tanımınız en az 2 karakterden oluşmalıdır veya günlük fiyat 0'dan büyük olmalıdır.");
+                Console.WriteLine(car.BrandId + " nolu marka araba sisteme eklendi");
+                _carDal.Add(car);
             }
+
         }
 
         public List<Car> GetAll()
@@ -36,28 +36,9 @@ namespace Business.Concrete
             return _carDal.GetAll();
         }
 
-        public List<Car> GetByBrandId(int id)
+        public List<CarDetailDto> GetCarDetails()
         {
-            return _carDal.GetByBrandId(id);
-        }
-
-        public List<Car> GetByColorId(int id)
-        {
-            return _carDal.GetByColorId(id);
-        }
-
-
-
-        public void Update(Car car)
-        {
-            if (car.Description.Length >= 2 && car.DailyPrice > 0)
-            {
-                _carDal.Update(car);
-            }
-            else
-            {
-                Console.WriteLine("Hata! Araba tanımınız en az 2 karakterden oluşmalıdır veya günlük fiyat 0'dan büyük olmalıdır.");
-            }
+            return _carDal.GetCarDetails();
         }
     }
 }

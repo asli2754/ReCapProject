@@ -1,24 +1,15 @@
 ﻿/*
-No database-level extended properties were found or all existing extended properties are open in other windows
-*/Create Table Brand(
-		Id int primary key identity(1,1),
-		BrandName nvarchar (50),
 
-)
+No database-level extended properties were found or all existing extended properties are open in other windows
 
-Create Table Color(
-		ColorId int primary key identity(1,1),
-		ColorName nvarchar (50),
-
-)
-
-Create Table Car(
-		Id int primary key identity (1,1),
-		BrandId int,
-		ColorId int,
-		ModelYear int,
-		DailyPrice decimal,
-		Descriptions nvarchar (50)
-		Foreign key (BrandId) references Brand(BrandId),
-		Foreign key (ColorId) references Color(ColorId)
+*/CREATE TABLE [dbo].[Cars]
+(
+	[Id] INT  NOT NULL PRIMARY KEY IDENTITY(1,1), 
+    [BrandId] INT NOT NULL, 
+    [ColorId] INT NOT NULL, 
+    [ModelYear] INT NOT NULL, 
+    [DailyPrice] DECIMAL NOT NULL, 
+    [Description] NCHAR(50) NOT NULL
+	FOREIGN KEY (ColorId) REFERENCES Colors(ColorId),
+	FOREIGN KEY (BrandId) REFERENCES Brands(BrandId)
 )
