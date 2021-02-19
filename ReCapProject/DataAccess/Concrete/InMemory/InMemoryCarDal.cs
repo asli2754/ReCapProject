@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -9,53 +10,84 @@ namespace DataAccess.Concrete.InMemory
 {
     public class InMemoryCarDal : ICarDal
     {
-        List<Car> _cars;
-        public InMemoryCarDal()
+        List<Car> _cars; // Veri tabanı.Burada ise bir araba listesi oluşturuyoruz, tüm operasyonların üstünde olmasının nedeni ise bu listenin global olmasını istememiz.
+        public InMemoryCarDal() // Constructor yapısı ile veri tabanımızda bir ürün listesi oluşturuyoruz.
         {
-            _cars = new List<Car> 
-            { 
-               new Car{ID=1, BrandID=1, ColorID=23, DailyPrice=150000, Description="Skoda", ModelYear= new DateTime(2015)},
-               new Car{ID=2, BrandID=1, ColorID=24, DailyPrice=190000, Description="Audi", ModelYear= new DateTime(2012)},
-               new Car{ID=3, BrandID=3, ColorID=32, DailyPrice=250000, Description="Mercedes", ModelYear= new DateTime(2021)}
+            _cars = new List<Car>() {
+                new Car{Id=1,BrandId=1,ColorId=1,ModelYear=2019,DailyPrice=200,Description="Opel Astra Sedan - Siyah"},
+                new Car{Id=2,BrandId=2,ColorId=2,ModelYear=2020,DailyPrice=210,Description="Ford Focus Otomatik- Beyaz"},
+                new Car{Id=3,BrandId=3,ColorId=3,ModelYear=2020,DailyPrice=280,Description="Audi A3 - Metalik Mavi"},
+                new Car{Id=4,BrandId=4,ColorId=4,ModelYear=2019,DailyPrice=325,Description="Volkswagen Tiguan SUV - Kırmızı"},
+                new Car{Id=5,BrandId=5,ColorId=5,ModelYear=2020,DailyPrice=1250,Description="Mercedes Benz E200 Exclusive Command - Gri"},
+
             };
         }
         public void Add(Car car)
         {
-            _cars.Add(car);
-        }
+            _cars.Add(car); // Business'dan gelen Car parametreli nesnemiz veri tabanımıza ekliyoruz. 
+        }                   // Veri tabanımız liste biçiminde olduğu için Add fonksiyonunu kullanıyoruz.
 
         public void Delete(Car car)
         {
-            Car carToDelete = _cars.SingleOrDefault(c=>c.BrandID == car.BrandID);
-            _cars.Remove(carToDelete);
+            //_cars.Remove(car); // Bu gösterim burada işe yaramaz. Çünkü, referanslarla çalışıyoruz.Bizim için önemli olan değeri tutan adres.
+            //Car carToDelete = null;  // Şuan adresi boş. Adresi,veri tabanında silinecek adrese eşitleyeceğiz.
+            //*********************************//
+            //Linq Kullanmadan Algoritmik Çözüm
+            //*********************************//
+            //foreach (var c in _cars) 
+            //{
+            //    if(c.Id == car.Id) // Parametreyle gelen car ID'sini veri tabanında bulunan diğer car ID'leri ile kıyasılıyoruz.
+            //    {
+            //        carToDelete = c; // Eşit olanı bulduğumuzda onu silinecek olan carToDelet'e atıyoruz.
+            //    }
+            //}
+            //*********************************//
+            //Linq Kullanımı
+            //*********************************//
+            Car carToDelete = _cars.SingleOrDefault(c => c.Id == car.Id);
+
+            _cars.Remove(carToDelete); // Silme işlemini gerçekleştiriyoruz.
         }
 
-        public List<Car> GetAll()
-        {
-            return _cars;
-        }
-
-     
-
-        public List<Car> GetById(int id)
-        {
-            return _cars.Where(c => c.BrandID == id).ToList();
-        }
-
-        public List<Car> GetByID(int brandID)
+        public Car Get(Expression<Func<Car, bool>> filter)
         {
             throw new NotImplementedException();
         }
 
+        public List<Car> GetAll()
+        {
+            return _cars; // Burada veri tabanının tümünü gösteren/veren bir operasyon için return komutunu kullanıyoruz.
+        }
+
+        public List<Car> GetAll(Expression<Func<Car, bool>> filter = null)
+        {
+            return _cars;
+        }
+
+        public List<Car> GetByBrandId(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<Car> GetByColorId(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<Car> GetById(int iD)
+        {
+            return _cars.Where(c => c.Id == iD).ToList();
+        }
+
         public void Update(Car car)
         {
-            Car carToUpdate = _cars.SingleOrDefault(c => c.BrandID == car.BrandID);
-            carToUpdate.BrandID = car.BrandID;
-            carToUpdate.ColorID = car.ColorID;
+            // Güncellemek istediğimiz arabımızın ID'sini listeden bulup bilgilerini güncelliyoruz.
+            Car carToUpdate = _cars.SingleOrDefault(c => c.Id == car.Id);
+            carToUpdate.ColorId = car.ColorId;
+            carToUpdate.BrandId = car.BrandId;
+            carToUpdate.ModelYear = car.ModelYear;
             carToUpdate.DailyPrice = car.DailyPrice;
             carToUpdate.Description = car.Description;
-            carToUpdate.ID = car.ID;
-            carToUpdate.ModelYear = car.ModelYear;
         }
     }
 }
