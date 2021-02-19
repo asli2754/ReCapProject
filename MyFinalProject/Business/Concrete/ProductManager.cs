@@ -5,6 +5,7 @@ using Business.Abstract;
 using DataAccess.Abstract;
 using DataAccess.Concrete.InMemory;
 using Entities.Concrete;
+using Entities.DTOs;
 
 namespace Business.Concrete
 {
@@ -24,6 +25,11 @@ namespace Business.Concrete
             return _productDal.GetAll();
         }
 
+        public IEnumerable<object> GetProductDetail()
+        {
+            throw new NotImplementedException();
+        }
+
         public IEnumerable<object> GetAllByCategory(int v)
         {
             throw new NotImplementedException();
@@ -37,6 +43,11 @@ namespace Business.Concrete
         public List<Product> GetByUnitPrice(decimal min, decimal max)
         {
             return _productDal.GetAll(p => p.UnitPrice>=min && p.UnitPrice<=max);
+        }
+
+        public List<ProductDetailDto> GetProductDetails()
+        {
+            return _productDal.GetProductDetails();
         }
     }
 }
