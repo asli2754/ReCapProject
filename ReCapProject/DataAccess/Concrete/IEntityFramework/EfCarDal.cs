@@ -14,7 +14,7 @@ namespace DataAccess.Concrete.IEntityFramework
         public void Add(Car entity)
         {
             //IDisposable pattern implementation of c#
-            using (NorthwindContext context = new NorthwindContext()) // Belleği hızlıca tamizlemek için using kullanıyoruz.
+            using (CarSQLContext context = new CarSQLContext()) // Belleği hızlıca tamizlemek için using kullanıyoruz.
             {                                                       //Using kullanıldıktan sonra garbage collectoraı çağırır ve çöpe girer.
                 var addedEntity = context.Entry(entity); // Referansla kontrol ediyoruz.
                 addedEntity.State = EntityState.Added; // Durumunu ekle yapıyoruz
@@ -25,7 +25,7 @@ namespace DataAccess.Concrete.IEntityFramework
         public void Delete(Car entity)
         {
 
-            using (NorthwindContext context = new NorthwindContext())
+            using (CarSQLContext context = new CarSQLContext())
             {
                 var addedEntity = context.Entry(entity); // Referansla kontrol ediyoruz.
                 addedEntity.State = EntityState.Deleted; // Durumunu silme yapıyoruz
@@ -35,7 +35,7 @@ namespace DataAccess.Concrete.IEntityFramework
 
         public Car Get(Expression<Func<Car, bool>> filter)
         {
-            using (NorthwindContext context = new NorthwindContext())
+            using (CarSQLContext context = new CarSQLContext())
             {
                 return context.Set<Car>().SingleOrDefault(filter);
             }
@@ -43,7 +43,7 @@ namespace DataAccess.Concrete.IEntityFramework
 
         public List<Car> GetAll(Expression<Func<Car, bool>> filter = null)
         {
-            using (NorthwindContext context = new NorthwindContext())
+            using (CarSQLContext context = new CarSQLContext())
             {
                 return filter == null ? context.Set<Car>().ToList() // ? ile nullmı sorgusu yapıyoruz, öyleyse List şeklinde hepsini veriyoruz.
                     : context.Set<Car>().Where(filter).ToList();   // : ile null değilse where ile getirilen koşula göre listeyi ver demek.
@@ -62,7 +62,7 @@ namespace DataAccess.Concrete.IEntityFramework
 
         public void Update(Car entity)
         {
-            using (NorthwindContext context = new NorthwindContext())
+            using (CarSQLContext context = new CarSQLContext())
             {
                 var addedEntity = context.Entry(entity); // Referansla kontrol ediyoruz.
                 addedEntity.State = EntityState.Modified; // Durumunu modifiye etmek yapıyoruz, yani güncelliyor :)
