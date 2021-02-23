@@ -15,7 +15,7 @@ namespace ConsoleUI
             //BrandTestGetAllandAdd();
 
             //ColorTestByColorId();
-
+           
             CarManager carManager = new CarManager(new EfCarDal());
 
             foreach (var car in carManager.GetCarDetails())
@@ -65,7 +65,7 @@ namespace ConsoleUI
 
             foreach (var car in carManager.GetAll())
             {
-                Console.WriteLine(car.Id + " - " + car.BrandId + " - " + car.ColorId + " - "
+                Console.WriteLine(car.CarId + " - " + car.BrandId + " - " + car.ColorId + " - "
                     + car.ModelYear + " - " + car.DailyPrice + " - " + car.Description);
             }
 

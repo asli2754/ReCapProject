@@ -43,7 +43,7 @@ namespace Business.Concrete
             //o zaman bana ürünleri verebilirsin.
             //return _productDal.GetAll();
 
-            if (DateTime.Now.Hour==22)
+            if (DateTime.Now.Hour == 01)
             {
                 return new ErrorDataResult<List<Product>>(Messages.MaintenanceTime);
 

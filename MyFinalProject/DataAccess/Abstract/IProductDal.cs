@@ -10,7 +10,7 @@ namespace DataAccess.Abstract
     public interface IProductDal:IEntityRepository<Product>
     {
         List<ProductDetailDto> GetProductDetails();
-        List<Product> GetAll();
+       // List<Product> GetAll();
     }
 }
 //code refactoring: kodun iyileştirilmesi
